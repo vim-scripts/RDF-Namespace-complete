@@ -1,0 +1,23 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1835
+
+In a file with namespace prefix declarations similar to XML, Turtle/Notation3 or SPARQL, call
+
+  :RDF
+
+to turn on completion on terms within a namespace using the preceding prefix. This will load all RDF/XML and n3-files found in one of the following dirs:
+
+  - $RDF_MODEL_FILES (environment variable)
+  - ~/rdfmodels/
+  - ~/Documents/rdfmodels/
+  - /usr/local/share/rdfmodels/
+
+Call
+
+  :RDF reload
+
+to reload model files, and
+
+  :RDF quit
+
+to restore the original omnifunc (if any).
+
