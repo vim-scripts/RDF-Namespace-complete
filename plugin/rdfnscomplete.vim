@@ -1,7 +1,7 @@
 "===============================================================
 " RDF Vocabulary/Model Omni-Completion for Vim 7+
 " Maintainer: Niklas Lindström <lindstream@gmail.com>
-" Version: 1.0
+" Version: 1.0.1
 " Last Updated: 2007-03-25
 "===============================================================
 "
@@ -80,7 +80,7 @@ class RdfnsLibrary(object):
         return vocab
 
     def collect_namespaces(self, refetch=False):
-        pfxns = self.rdfns_prefixes
+        pfxns = self.rdfns_prefixes = {}
         for i, line in enumerate(vim.current.buffer):
             if i > self.MAX_LINE_SCAN:
                 break
@@ -123,7 +123,7 @@ class RdfnsLibrary(object):
 
 
 def vimcomplete_rdfns(context, match):
-    completions = get_completions(context, match)
+    completions = get_rdfns_completions(context, match)
     vimDictRepr = '['
     for cmpl in completions:
         vimDictRepr += '{'
@@ -136,16 +136,14 @@ def vimcomplete_rdfns(context, match):
     vim.command("silent let g:rdfns_complete_completions = %s" % vimDictRepr)
 
 
-def get_completions(context, match):
+def get_rdfns_completions(context, match):
     basedir = get_rdf_model_dir()
     library = RdfnsLibrary.get_instance(basedir)
 
     completions = []
 
     prefix = context.split(':')[0]
-    vocab = library.get_vocabulary(prefix)
-    if not vocab:
-        return completions
+    vocab = library.get_vocabulary(prefix) or []
 
     pfxs = []
     if not ':' in context:
@@ -159,7 +157,7 @@ def get_completions(context, match):
     return completions
 
 
-# TODO: condigure better
+# TODO: configure better
 RDF_MODEL_DIRS = [
         os.environ.get('RDF_MODEL_FILES', ''),
         '~/rdfmodels',
